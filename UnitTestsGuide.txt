@@ -1,0 +1,22 @@
+*Good tests:
+	Clean, reliable, maintainable
+	No logic (if, for, etc)
+	Isolated (not call each other)
+	Not too specific/general
+
+Testable code is clean
+Clean code is testable
+
+*What to test:
+	Return of methods (all of the execution paths)
+
+*What not to test:
+	Language features
+	third-party code
+
+*Naming and organization of tests:
+	Each project in a solution should have a test project: TestNinja - TestNinja.UnitTests
+	A test class for each class in the production code: Reservation - ReservationTests
+	Number of tests >= Number of execution paths
+	Naming convention MethodName_Scenario_ExpectedBehavior
+
