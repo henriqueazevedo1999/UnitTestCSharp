@@ -2,26 +2,28 @@
 
 public static class BookingHelper
 {
-    private const string StatusCancelled = "Cancelled";
-
-    public static string OverlappingBookingsExist(Booking booking)
+    public static string OverlappingBookingsExist(Booking booking, IBookingRepository repository)
     {
-        if (booking.Status == StatusCancelled)
+        if (booking.Status == "Cancelled")
             return string.Empty;
 
-        var unitOfWork = new UnitOfWork();
-        var bookings = unitOfWork.Query<Booking>().Where(b => b.Id != booking.Id && b.Status != StatusCancelled);
-        var overlappingBooking = bookings.FirstOrDefault(
-                b => booking.ArrivalDate >= b.ArrivalDate
-                    && booking.ArrivalDate < b.DepartureDate
-                    || booking.DepartureDate > b.ArrivalDate
-                    && booking.DepartureDate <= b.DepartureDate);
+        var bookings = repository.GetActiveBookings(booking.Id);
+
+        var overlappingBooking = bookings
+            .FirstOrDefault(
+                b => booking.ArrivalDate < b.DepartureDate
+                    && b.ArrivalDate < booking.DepartureDate);
 
         return overlappingBooking == null ? string.Empty : overlappingBooking.Reference;
     }
 }
 
-public class UnitOfWork
+public interface IUnitOfWork
+{
+    IQueryable<T> Query<T>();
+}
+
+public class iUnitOfWork : IUnitOfWork
 {
     public IQueryable<T> Query<T>()
     {

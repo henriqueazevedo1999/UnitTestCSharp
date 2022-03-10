@@ -40,5 +40,4 @@ public class EmailSender : IEmailSender
 
         File.Delete(filename);
     }
-
 }

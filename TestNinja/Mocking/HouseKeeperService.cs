@@ -1,22 +1,18 @@
 namespace TestNinja.Mocking;
 
-public class HouseKeeperService
+public class HousekeeperService
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IStatementGenerator _statementGenerator;
+    private readonly IXtraMessageBox _xtraMessageBox;
     private readonly IEmailSender _emailSender;
-    private readonly IXtraMessageBox _messageBox;
+    private readonly IStatementGenerator _statementGenerator;
 
-    public HouseKeeperService(
-        IUnitOfWork unitOfWork,
-        IStatementGenerator statementGenerator,
-        IEmailSender emailSender,
-        IXtraMessageBox messageBox)
+    public HousekeeperService(IUnitOfWork unitOfWork, IXtraMessageBox xtraMessageBox, IEmailSender emailSender, IStatementGenerator statementGenerator)
     {
         _unitOfWork = unitOfWork;
-        _statementGenerator = statementGenerator;
+        _xtraMessageBox = xtraMessageBox;
         _emailSender = emailSender;
-        _messageBox = messageBox;
+        _statementGenerator = statementGenerator;
     }
 
     public void SendStatementEmails(DateTime statementDate)
@@ -43,27 +39,10 @@ public class HouseKeeperService
             }
             catch (Exception e)
             {
-                _messageBox.Show(e.Message, string.Format("Email failure: {0}", emailAddress),
+                _xtraMessageBox.Show(e.Message, string.Format("Email failure: {0}", emailAddress),
                     MessageBoxButtons.OK);
             }
         }
-    }
-}
-
-public enum MessageBoxButtons
-{
-    OK
-}
-
-public interface IXtraMessageBox
-{
-    void Show(string s, string housekeeperStatements, MessageBoxButtons ok);
-}
-
-public class XtraMessageBox : IXtraMessageBox
-{
-    public void Show(string s, string housekeeperStatements, MessageBoxButtons ok)
-    {
     }
 }
 
@@ -108,21 +87,4 @@ public class Housekeeper
     public int Oid { get; set; }
     public string FullName { get; set; }
     public string StatementEmailBody { get; set; }
-}
-
-public class HousekeeperStatementReport
-{
-    public HousekeeperStatementReport(int housekeeperOid, DateTime statementDate)
-    {
-    }
-
-    public bool HasData { get; set; }
-
-    public void CreateDocument()
-    {
-    }
-
-    public void ExportToPdf(string filename)
-    {
-    }
 }
